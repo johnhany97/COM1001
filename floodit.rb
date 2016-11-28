@@ -57,8 +57,8 @@ def main_menu()
     status = gets.chomp
     
     if (status.downcase == "s")
-        counter_turns = 0
-        game_won = false
+        $counter_turns = 0
+        $game_won = false
         start_game()
     elsif (status.downcase == "c")
         settings()
@@ -130,6 +130,11 @@ def game_play(board)
         end
     else
         puts ("You won after #$counter_turns turns")
+        if ($high_score == -1)
+          $high_score = $counter_turns
+        elsif ($high_score > $counter_turns)
+          $high_score = $counter_turns
+        end
         user_response = gets()
         while (user_response != "\n") do
           user_response = gets()
