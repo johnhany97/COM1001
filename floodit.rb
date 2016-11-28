@@ -12,17 +12,18 @@ def get_board(width, height)
   # beta implementation
   color = Array.new(6)
   color[0] = :red
-  color[1] = :blue
-  color[2] = :yellow
-  color[3] = :cyan
+  color[1] = :green
+  color[2] = :blue
+  color[3] = :yellow
   color[4] = :magenta
+  color[5] = :cyan
   board = Array.new(height)
   for i in 0...board.size
     board[i] = Array.new(width)
   end
   for i in 0...board.size
       for j in 0...board[i].size
-          board[i][j] = color[rand(5)]
+          board[i][j] = color[rand(6)]
       end
   end
   return board
@@ -33,7 +34,7 @@ def splash_screen()
     begin
         system ("clear")
         splash = ConsoleSplash.new(15, 44)
-        splash.write_header("FloodIt COM1001 Assignment", "Johnhany97", "0.0.0")
+        splash.write_header("FloodIt", "John Ayad", "1.0")
         splash.write_horizontal_pattern("*")
         splash.write_vertical_pattern("|")
         splash.write_center(-3, "<press Enter to continue>")
@@ -90,6 +91,13 @@ def game_play(board)
         colour_input = gets.chomp
         if (colour_input.downcase == "r" && board[0][0] != :red)
             board = call_update(board, :red, board[0][0], 0, 0)
+            $counter_turns += 1
+            if (completed_percent(board) == 100)
+                $game_won = true;
+            end
+            game_play(board)
+        elsif (colour_input.downcase == "g" && board[0][0] != :green)
+            board = call_update(board, :green, board[0][0], 0, 0)
             $counter_turns += 1
             if (completed_percent(board) == 100)
                 $game_won = true;
