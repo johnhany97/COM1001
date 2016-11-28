@@ -86,19 +86,19 @@ def game_play(board)
     puts "Choose a colour: "
     colour_input = gets.chomp
     if (colour_input.downcase == "r")
-        update_board(board, ":red", board[i][j], 0, 0)
+        board = call_update(board, :red, board[0][0], 0, 0)
         game_play(board)
     elsif (colour_input.downcase == "b")
-        update_board(board, ":blue", board[i][j], 0, 0)
+        board = call_update(board, :blue, board[0][0], 0, 0)
         game_play(board)
     elsif (colour_input.downcase == "y")
-        update_board(board, :yellow, board[i][j], 0, 0)
+        board = call_update(board, :yellow, board[0][0], 0, 0)
         game_play(board)
     elsif (colour_input.downcase == "c")
-        update_board(board, :cyan, board[i][j], 0, 0)
+        board = call_update(board, :cyan, board[0][0], 0, 0)
         game_play(board)
     elsif (colour_input.downcase == "m")
-        update_board(board, :magenta, board[i][j], 0, 0)
+        board = call_update(board, :magenta, board[0][0], 0, 0)
         game_play(board)
     elsif (colour_input.downcase == "q")
         main_menu()
@@ -106,15 +106,20 @@ def game_play(board)
         game_play(board)
     end
 end
+  
+def call_update(board, x, old, i, j)
+    board[i][j] = update_board(board, x, old, i, j)
+    if (i < $height_main - 1 && board[i+1][j] == old)
+      call_update(board, x, old, i + 1, j)
+    end
+    if (j < $width_main - 1 && board[i][j+1] == old)
+      call_update(board, x, old, i, j + 1)
+    end
+    return board
+end
 
 def update_board(board, x, old, i, j)
-    
-    board[i][j] == x
-    if (board[i][j] != old)
-        return
-    end
-    update_board(board, x, old, i + 1, j)
-    update_board(board, x, old, i, j + 1)
+   return x
 end
     
 def completed_percent(board)
