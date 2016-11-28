@@ -1,5 +1,8 @@
 require "console_splash"
 
+#Global Variables
+$high_score = -1;
+
 def get_board(width, height)
   # TODO: Implement this method
   #
@@ -19,11 +22,8 @@ def get_board(width, height)
   # of your implementation.
 end
 
-# TODO: Implement everything else as described in the
-#       assignment brief.
-# 
+# Splash Screen
 def splash_screen()
-    # Splash screen
     begin
         system ("clear")
         splash = ConsoleSplash.new(15, 44)
@@ -33,7 +33,41 @@ def splash_screen()
         splash.write_center(-3, "<press Enter to continue>")
         splash.splash
     end until (gets() == "\n")
+    main_menu()
+end
+    
+def main_menu()
+    system ("clear")
+    puts ("Main menu:")
+    puts ("s = Start Game")
+    puts ("c = Change Size")
+    puts ("q = Quit")
+    if ($high_score == -1)
+        puts ("No games played yet.")
+    else
+        puts ("Best game: #$highScore turns")
+    end
+    print ("Please enter your choice: ")
+    status = gets.chomp
+    
+    if (status.downcase == "s")
+        start_game()
+    elsif (status.downcase == "c")
+        settings()
+    elsif (status.downcase == "q")
+        exit
+    else 
+        main_menu()
+    end
 end
 
+def start_game()
+
+end
+    
+def settings()
+    
+end
+
+# Actually start the game
 splash_screen()
-system("clear")
