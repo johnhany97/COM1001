@@ -1,25 +1,28 @@
 require "console_splash"
 
 #Global Variables
-$high_score = -1;
+$high_score = -1
+$width_main = 14
+$heigh_main = 9
 
 def get_board(width, height)
-  # TODO: Implement this method
-  #
-  # This method should return a two-dimensional array.
-  # Each element of the array should be one of the
-  # following values (These are "symbols", you can use
-  # them like constant values):
-  # :red
-  # :blue
-  # :green
-  # :yellow
-  # :cyan
-  # :magenta
-  #
-  # It is important that this method is used because
-  # this will be used for checking the functionality
-  # of your implementation.
+  # beta implementation
+  color = Array.new(6)
+  color[0] = :red
+  color[1] = :blue
+  color[2] = :yellow
+  color[3] = :cyan
+  color[4] = :magenta
+  board = Array.new(height)
+  for i in 0...board.size
+    board[i] = Array.new(width)
+  end
+  for i in 0...board.size
+      for j in 0...board[i].size
+          board[i][j] = color[rand(5)]
+      end
+  end
+  return board
 end
 
 # Splash Screen
@@ -62,11 +65,11 @@ def main_menu()
 end
 
 def start_game()
-
+    board = get_board($width_main, $height_main)
 end
     
 def settings()
-    
+   
 end
 
 # Actually start the game
