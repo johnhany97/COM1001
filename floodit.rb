@@ -175,7 +175,21 @@ def completed_percent(board)
 end
 
 def settings()
-   
+    puts ("Width (Currently #$width_main)? ")
+    width = gets.chomp.to_i
+    while (width < 0) do
+        puts ("Width (Currently #$width_main)? ")
+        width = gets.chomp.to_i
+    end
+    puts ("Height (Currently #$height_main)? ")
+    height = gets.chomp.to_i
+    while (height < 0) do
+        puts ("Height (Currently #$height_main)? ")
+        height = gets.chomp.to_i
+    end
+    $width_main = width
+    $height_main = height
+    main_menu()
 end
 
 # Actually start the game
