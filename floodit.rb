@@ -1,3 +1,4 @@
+require "console_splash"
 
 def get_board(width, height)
   # TODO: Implement this method
@@ -20,3 +21,19 @@ end
 
 # TODO: Implement everything else as described in the
 #       assignment brief.
+# 
+def splash_screen()
+    # Splash screen
+    begin
+        system ("clear")
+        splash = ConsoleSplash.new(15, 44)
+        splash.write_header("FloodIt COM1001 Assignment", "Johnhany97", "0.0.0")
+        splash.write_horizontal_pattern("*")
+        splash.write_vertical_pattern("|")
+        splash.write_center(-3, "<press Enter to continue>")
+        splash.splash
+    end until (gets() == "\n")
+end
+
+splash_screen()
+system("clear")
