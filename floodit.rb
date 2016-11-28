@@ -45,7 +45,7 @@ def main_menu()
     if ($high_score == -1)
         puts ("No games played yet.")
     else
-        puts ("Best game: #$highScore turns")
+        puts ("Best game: #$high_score turns")
     end
     print ("Please enter your choice: ")
     status = gets.chomp
