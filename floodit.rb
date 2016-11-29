@@ -76,7 +76,7 @@ def splash_screen()
         splash.splash
     end until (gets() == "\n")
     # Go to main menu
-    main_menu()
+    main_menu
 end
 
 # Main Menu
@@ -92,34 +92,34 @@ end
 def main_menu()
     system ("clear")
     # List of options for users
-    puts ("Main menu:")
-    puts ("s = Start Game")
-    puts ("c = Change Size")
-    puts ("q = Quit")
+    puts "Main menu:"
+    puts "s = Start Game"
+    puts "c = Change Size"
+    puts "q = Quit"
     # High Score
-    if ($high_score == -1)
-        puts ("No games played yet.")
+    if $high_score == -1
+        puts "No games played yet."
     else
-        puts ("Best game: #$high_score turns")
+        puts "Best game: #$high_score turns"
     end
-    print ("Please enter your choice: ")
+    print "Please enter your choice: "
     status = gets.chomp
     # Respond to user's entry
-    if (status.downcase == "s")
+    if status.downcase == "s"
         # Reset global variables in preperation for new game
         $counter_turns = 0
         $game_won = false
         # Let the games begin
-        start_game()
-    elsif (status.downcase == "c")
+        start_game
+    elsif status.downcase == "c"
         # Settings menu
-        settings()
-    elsif (status.downcase == "q")
+        settings
+    elsif status.downcase == "q"
         # Good day to you sir/madam
         exit
     else 
         # Invalid entry => Reload main menu
-        main_menu()
+        main_menu
     end
 end
 
@@ -175,76 +175,76 @@ def game_play(board)
         puts "Choose a colour: "
         colour_input = gets.chomp
         # Red
-        if (colour_input.downcase == "r" && board[0][0] != :red)
+        if colour_input.downcase == "r" && board[0][0] != :red
             board = call_update(board, :red, board[0][0], 0, 0)
             $counter_turns += 1
-            if (completed_percent(board) == 100)
+            if completed_percent(board) == 100
                 $game_won = true;
             end
             game_play(board)
         # Green
-        elsif (colour_input.downcase == "g" && board[0][0] != :green)
+        elsif colour_input.downcase == "g" && board[0][0] != :green
             board = call_update(board, :green, board[0][0], 0, 0)
             $counter_turns += 1
-            if (completed_percent(board) == 100)
+            if completed_percent(board) == 100
                 $game_won = true;
             end
             game_play(board)
         # Blue
-        elsif (colour_input.downcase == "b" && board[0][0] != :blue)
+        elsif colour_input.downcase == "b" && board[0][0] != :blue
             board = call_update(board, :blue, board[0][0], 0, 0)
             $counter_turns += 1
-            if (completed_percent(board) == 100)
+            if completed_percent(board) == 100
                 $game_won = true;
             end
             game_play(board)
         # Yellow
-        elsif (colour_input.downcase == "y" && board[0][0] != :yellow)
+        elsif colour_input.downcase == "y" && board[0][0] != :yellow
             board = call_update(board, :yellow, board[0][0], 0, 0)
             $counter_turns += 1
-            if (completed_percent(board) == 100)
+            if completed_percent(board) == 100
                 $game_won = true;
             end
             game_play(board)
         # Cyan
-        elsif (colour_input.downcase == "c" && board[0][0] != :cyan)
+        elsif colour_input.downcase == "c" && board[0][0] != :cyan
             board = call_update(board, :cyan, board[0][0], 0, 0)
             $counter_turns += 1
-            if (completed_percent(board) == 100)
+            if completed_percent(board) == 100
                 $game_won = true;
             end
             game_play(board)
         # Magenta
-        elsif (colour_input.downcase == "m" && board[0][0] != :magenta)
+        elsif colour_input.downcase == "m" && board[0][0] != :magenta
             board = call_update(board, :magenta, board[0][0], 0, 0)
-            $counter_turns += 1 
-            if (completed_percent(board) == 100)
+            $counter_turns += 1
+            if completed_percent(board) == 100
                 $game_won = true;
             end
             game_play(board)
         # Quit the game itself
-        elsif (colour_input.downcase == "q")
-            main_menu()
+        elsif colour_input.downcase == "q"
+            main_menu
         else 
             # Invalid entry by user => Clear screen and wait for input
             game_play(board)
         end
     else
         # Show user he won in how many moves
-        puts ("You won after #$counter_turns turns")
+        puts "You won after #$counter_turns turns"
         # Update highscore if relevant or requires updating
-        if ($high_score == -1)
+        if $high_score == -1
           $high_score = $counter_turns
-        elsif ($high_score > $counter_turns)
+        elsif $high_score > $counter_turns
           $high_score = $counter_turns
         end
         # Continue when Enter is pressed
-        user_response = gets()
-        while (user_response != "\n") do
-          user_response = gets()
+        user_response = gets
+        while user_response != "\n" do
+          user_response = gets
         end
         # Return to main menu
-        main_menu()
+        main_menu
     end
 end
 
@@ -267,19 +267,19 @@ def call_update(board, x, old, i, j)
     # Update Position
     board[i][j] = x
     # Bottom
-    if (i < $height_main - 1 && board[i+1][j] == old)
+    if i < $height_main - 1 && board[i+1][j] == old
       call_update(board, x, old, i + 1, j)
     end
     # Top
-    if (i > 0 && board[i-1][j] == old)
+    if i > 0 && board[i-1][j] == old
       call_update(board, x, old, i - 1, j)
     end
     # Right
-    if (j < $width_main - 1 && board[i][j+1] == old)
+    if j < $width_main - 1 && board[i][j+1] == old
       call_update(board, x, old, i, j + 1)
     end
     # Left
-    if (j > 0 && board[i][j - 1] == old)
+    if j > 0 && board[i][j - 1] == old
       call_update(board, x, old, i, j - 1)
     end
     # Return the updated board
@@ -304,7 +304,7 @@ def completed_percent(board)
     num = 0
     for i in 0...board.size
       for j in 0...board[i].size
-          if (board[i][j] == color_to_search)
+          if board[i][j] == color_to_search
               num += 1
           end
       end
@@ -324,27 +324,27 @@ end
 # Example call:
 #   settings()
 #   
-def settings(
+def settings()
     # Start by width
-    puts ("Width (Currently #$width_main)? ")
+    puts "Width (Currently #$width_main)? "
     width = gets.chomp.to_i
-    while (width < 0) do
-        puts ("Width (Currently #$width_main)? ")
+    while width < 0 do
+        puts "Width (Currently #$width_main)? "
         width = gets.chomp.to_i
     end
     # Then height
-    puts ("Height (Currently #$height_main)? ")
+    puts "Height (Currently #$height_main)? "
     height = gets.chomp.to_i
-    while (height < 0) do
-        puts ("Height (Currently #$height_main)? ")
+    while height < 0 do
+        puts "Height (Currently #$height_main)? "
         height = gets.chomp.to_i
     end
     # Update global variables
     $width_main = width
     $height_main = height
     # Return to main menu
-    main_menu()
+    main_menu
 end
 
 # Actually start the game
-splash_screen()
+splash_screen
