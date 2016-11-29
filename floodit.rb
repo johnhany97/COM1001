@@ -28,13 +28,7 @@ $game_won = false
 #   
 def get_board(width, height)
   #Initialize Array of colours
-  color = Array.new(6)
-  color[0] = :red
-  color[1] = :green
-  color[2] = :blue
-  color[3] = :yellow
-  color[4] = :magenta
-  color[5] = :cyan
+  color = [:red, :green, :blue, :yellow, :magenta, :cyan]
   #Initialize actual board array
   board = Array.new(height)
   for i in 0...board.size
@@ -65,7 +59,7 @@ end
 def splash_screen()
     begin
         # Clear screen
-        system ("clear")
+        system "clear"
         # Initialize the splash screen
         splash = ConsoleSplash.new(15, 44)
         splash.write_header("FloodIt", "John Ayad", "1.0")
@@ -74,7 +68,7 @@ def splash_screen()
         splash.write_center(-3, "<press Enter to continue>")
         # Run the splash screen
         splash.splash
-    end until (gets() == "\n")
+    end until gets == "\n"
     # Go to main menu
     main_menu
 end
@@ -90,7 +84,7 @@ end
 # Example call:
 #   main_menu()
 def main_menu()
-    system ("clear")
+    system "clear"
     # List of options for users
     puts "Main menu:"
     puts "s = Start Game"
@@ -140,7 +134,7 @@ end
 #   game_play(board)
 #
 def game_play(board)
-    system ("clear")
+    system "clear"
     # Print colourized board
     for i in 0...board.size
         for j in 0...board[i].size
@@ -178,49 +172,37 @@ def game_play(board)
         if colour_input.downcase == "r" && board[0][0] != :red
             board = call_update(board, :red, board[0][0], 0, 0)
             $counter_turns += 1
-            if completed_percent(board) == 100
-                $game_won = true;
-            end
+            $game_won = true if completed_percent(board) == 100
             game_play(board)
         # Green
         elsif colour_input.downcase == "g" && board[0][0] != :green
             board = call_update(board, :green, board[0][0], 0, 0)
             $counter_turns += 1
-            if completed_percent(board) == 100
-                $game_won = true;
-            end
+            $game_won = true if completed_percent(board) == 100
             game_play(board)
         # Blue
         elsif colour_input.downcase == "b" && board[0][0] != :blue
             board = call_update(board, :blue, board[0][0], 0, 0)
             $counter_turns += 1
-            if completed_percent(board) == 100
-                $game_won = true;
-            end
+            $game_won = true if completed_percent(board) == 100
             game_play(board)
         # Yellow
         elsif colour_input.downcase == "y" && board[0][0] != :yellow
             board = call_update(board, :yellow, board[0][0], 0, 0)
             $counter_turns += 1
-            if completed_percent(board) == 100
-                $game_won = true;
-            end
+            $game_won = true if completed_percent(board) == 100
             game_play(board)
         # Cyan
         elsif colour_input.downcase == "c" && board[0][0] != :cyan
             board = call_update(board, :cyan, board[0][0], 0, 0)
             $counter_turns += 1
-            if completed_percent(board) == 100
-                $game_won = true;
-            end
+            $game_won = true if completed_percent(board) == 100
             game_play(board)
         # Magenta
         elsif colour_input.downcase == "m" && board[0][0] != :magenta
             board = call_update(board, :magenta, board[0][0], 0, 0)
             $counter_turns += 1
-            if completed_percent(board) == 100
-                $game_won = true;
-            end
+            $game_won = true if completed_percent(board) == 100
             game_play(board)
         # Quit the game itself
         elsif colour_input.downcase == "q"
@@ -328,14 +310,14 @@ def settings()
     # Start by width
     puts "Width (Currently #$width_main)? "
     width = gets.chomp.to_i
-    while width < 0 do
+    while width <= 0 do
         puts "Width (Currently #$width_main)? "
         width = gets.chomp.to_i
     end
     # Then height
     puts "Height (Currently #$height_main)? "
     height = gets.chomp.to_i
-    while height < 0 do
+    while height <= 0 do
         puts "Height (Currently #$height_main)? "
         height = gets.chomp.to_i
     end
