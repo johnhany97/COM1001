@@ -308,17 +308,17 @@ end
 #   
 def settings()
     # Start by width
-    puts "Width (Currently #$width_main)? "
+    print "Width (Currently #$width_main)? "
     width = gets.chomp.to_i
     while width <= 0 do
-        puts "Width (Currently #$width_main)? "
+        print "Width (Currently #$width_main)? "
         width = gets.chomp.to_i
     end
     # Then height
-    puts "Height (Currently #$height_main)? "
+    print "Height (Currently #$height_main)? "
     height = gets.chomp.to_i
     while height <= 0 do
-        puts "Height (Currently #$height_main)? "
+        print "Height (Currently #$height_main)? "
         height = gets.chomp.to_i
     end
     # Update global variables
