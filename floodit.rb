@@ -291,16 +291,14 @@ def completed_percent(board)
     color_to_search = board[0][0]
     # Counter of how many blocks of same colour
     num = 0
-    for i in 0...board.size
-      for j in 0...board[i].size
-          if board[i][j] == color_to_search
-              num += 1
-          end
+    board.each do |row|
+      row.each do |cell|
+        num += 1 if cell == color_to_search
       end
     end
     # Total number of blocks in board
     total_blocks = $width_main * $height_main
-    return ((num * 100) / total_blocks)
+    return (num * 100) / total_blocks
 end
 
 # Settings menu
