@@ -328,10 +328,8 @@ def settings()
         print "Height (Currently #$height_main)? "
         height = gets.chomp.to_i
     end
-    if ($width_main != width) || ($height_main != height)
-        # Reset the high score since it's a new size
-        $high_score = -1
-    end
+    # Reset the high score since it's a new size
+    $high_score = -1 if ($width_main != width) || ($height_main != height)
     # Update global variables
     $width_main = width
     $height_main = height
