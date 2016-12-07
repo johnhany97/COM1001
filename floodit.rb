@@ -30,10 +30,7 @@ def get_board(width, height)
   #Initialize Array of colours
   color = [:red, :green, :blue, :yellow, :magenta, :cyan]
   #Initialize actual board array
-  board = Array.new(height)
-  for i in 0...board.size
-    board[i] = Array.new(width)
-  end
+  board = Array.new(height) { Array.new(width) }
   #Fill the 2D board array
   for i in 0...board.size
       for j in 0...board[i].size
@@ -136,12 +133,7 @@ end
 def game_play(board)
     system "clear"
     # Print colourized board
-    for i in 0...board.size
-        for j in 0...board[i].size
-            print "  ".colorize(:background => board[i][j])
-        end
-        puts
-    end
+    print_board(board)
     # Game Info
     # - Number of moves played by user so far
     # - Current completion percentage
@@ -230,6 +222,21 @@ def game_play(board)
     end
 end
 
+# Board printing function
+# 
+# Parameters:
+#    board => The array of the current board
+#    
+# Example call:
+#    print_board(board)
+def print_board(board)
+  board.each do |row|
+    row.each do |x|
+      print "  ".colorize(:background => x)
+    end
+    puts
+  end
+end
 # Flooding recursive function
 # 
 # Parameters:
@@ -320,6 +327,10 @@ def settings()
     while height <= 0 do
         print "Height (Currently #$height_main)? "
         height = gets.chomp.to_i
+    end
+    if ($width_main != width) || ($height_main != height)
+        # Reset the high score since it's a new size
+        $high_score = -1
     end
     # Update global variables
     $width_main = width
