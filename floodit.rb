@@ -9,21 +9,21 @@ $height_main = 9
 
 # Returns an initialized board of the following colours
 # Red, Green, Blue, Yellow, Magenta, Cyan
-# 
+#
 # Size of array is fully based on width & height set either by default or user
 # Colours in array are saved as symbols so return is an array of symbols
-# 
-# Paremeters:
+#
+# Parameters:
 #   Width => width of board
 #   Height => Height of board
-# 
+#
 # Returns:
 #   An initliazed array of symbols to be used in game
-#   
+#
 # Example call:
 #   get_board(5, 4)
 #   get_board(20, 30)
-#   
+#
 def get_board(width, height)
   #Initialize Array of colours
   color = [:red, :green, :blue, :yellow, :magenta, :cyan]
@@ -41,16 +41,16 @@ end
 # Splash Screen
 # Displays a screen of size 44 x 15
 # Takes user to main menu
-# 
+#
 # Content:
 #   - Author
 #   - Name of game
 #   - Game Version
 #   - Instruction on how to continue (Pressing Enter)
-# 
+#
 # Example call:
 #   splash_screen()
-#   
+#
 def splash_screen()
     begin
         # Clear screen
@@ -65,7 +65,7 @@ def splash_screen()
         splash.splash
     end until gets == "\n"
     # Go to main menu
-    main_menu
+    main_menu(14, 9)
 end
 
 # Main Menu
@@ -75,10 +75,14 @@ end
 # 3- Quit the game
 # 4- View High Score
 # Any invalid entry reloads the main menu and clears the screen before so
-# 
+#
+# Parameters:
+#   Width => width of board
+#   Height => Height of board
+#
 # Example call:
-#   main_menu()
-def main_menu()
+#   main_menu(14, 9)
+def main_menu(width, height)
     system "clear"
     # List of options for users
     puts "Main menu:"
@@ -96,39 +100,41 @@ def main_menu()
     # Respond to user's entry
     if status.downcase == "s"
         # Let the games begin
-        start_game
+        start_game(width, height)
     elsif status.downcase == "c"
         # Settings menu
-        settings
+        settings(width, height)
     elsif status.downcase == "q"
         # Good day to you sir/madam
         exit
     else 
         # Invalid entry => Reload main menu
-        main_menu
+        main_menu(width, height)
     end
 end
 
-def start_game()
+def start_game(width, height)
     # Initalize the board
-    board = get_board($width_main, $height_main)
+    board = get_board(width, height)
     # Start the game play
     game_play(board, false, 0)
 end
 
 # The game itself
 # Where all the magic takes place
-# 
+#
 # Parameters:
 #   board => An array of symbols containing the colours of the blocks
 #   game_won => Boolean representing current state of game (true if game is won)
 #   counter_turns => Integer representing number of moves in current game
-# 
+#
 # Example call:
-#   game_play(board, false)
+#   game_play(board, false, 0)
 #
 def game_play(board, game_won, counter_turns)
     system "clear"
+    width = board[0].length
+    height = board.length
     # Print colourized board
     print_board(board)
     # Game Info
@@ -141,7 +147,7 @@ def game_play(board, game_won, counter_turns)
     # Based on current condition
     # First possible condition: User hasn't won yet
     # Second possible condition: User has won
-    # 
+    #
     # For First scenario:
     #   Inputs expected: r, g, b, c, y, m, q
     #   Response:
@@ -189,7 +195,7 @@ def game_play(board, game_won, counter_turns)
             game_play(board, game_won, counter_turns + 1)
         # Quit the game itself
         elsif colour_input.downcase == "q"
-            main_menu
+            main_menu(width, height)
         else 
             # Invalid entry by user OR Entry is same colour already => Clear screen and wait for input
             game_play(board, game_won, counter_turns)
@@ -209,15 +215,15 @@ def game_play(board, game_won, counter_turns)
           user_response = gets
         end
         # Return to main menu
-        main_menu
+        main_menu(width, height)
     end
 end
 
 # Board printing function
-# 
+#
 # Parameters:
 #    board => The array of the current board
-#    
+#
 # Example call:
 #    print_board(board)
 def print_board(board)
@@ -239,15 +245,17 @@ end
 #
 # Returns:
 #   An updated board (array of symbols)
-#   
+#
 # Example call:
 #   call_update(board, :red, board[0][0], 0, 0)
-#   
+#
 def call_update(board, x, old, i, j)
+    width = board[0].length
+    height = board.length
     # Update Position
     board[i][j] = x
     # Bottom
-    if i < $height_main - 1 && board[i+1][j] == old
+    if i < height - 1 && board[i+1][j] == old
       call_update(board, x, old, i + 1, j)
     end
     # Top
@@ -255,7 +263,7 @@ def call_update(board, x, old, i, j)
       call_update(board, x, old, i - 1, j)
     end
     # Right
-    if j < $width_main - 1 && board[i][j+1] == old
+    if j < width - 1 && board[i][j+1] == old
       call_update(board, x, old, i, j + 1)
     end
     # Left
@@ -267,16 +275,16 @@ def call_update(board, x, old, i, j)
 end
 
 # Function to return percentage of completion of game
-# 
+#
 # Parameters:
 #   board => Array of symbols
-# 
+#
 # Returns:
 #   Percentage of completion based on colour in 0 and 0 position
-# 
+#
 # Example call:
 #   completed_percent(board)
-#   
+#
 def completed_percent(board)
     # Take note of colour in 0 and 0 position
     color_to_search = board[0][0]
@@ -288,42 +296,42 @@ def completed_percent(board)
       end
     end
     # Total number of blocks in board
-    total_blocks = $width_main * $height_main
+    total_blocks = board.length * board[0].length
     return (num * 100) / total_blocks
 end
 
 # Settings menu
-# 
+#
 # Allows changing of width and height
-# 
+#
 # Will fail to update and keep on looping till received an input of more
 # than 0 for both width and height
-# 
+#
 # Example call:
 #   settings()
-#   
-def settings()
+#
+def settings(width, height)
     # Start by width
-    print "Width (Currently #$width_main)? "
-    width = gets.chomp.to_i
-    while width <= 0 do
-        print "Width (Currently #$width_main)? "
-        width = gets.chomp.to_i
+    print "Width (Currently #{width})? "
+    x = gets.chomp.to_i
+    while x <= 0 do
+        print "Width (Currently #{width})? "
+        x = gets.chomp.to_i
     end
     # Then height
-    print "Height (Currently #$height_main)? "
-    height = gets.chomp.to_i
-    while height <= 0 do
-        print "Height (Currently #$height_main)? "
-        height = gets.chomp.to_i
+    print "Height (Currently #{height})? "
+    y = gets.chomp.to_i
+    while y <= 0 do
+        print "Height (Currently #{height})? "
+        y = gets.chomp.to_i
     end
     # Reset the high score since it's a new size
-    $high_score = -1 if ($width_main != width) || ($height_main != height)
+    $high_score = -1 if (width != x) || (height != y)
     # Update global variables
-    $width_main = width
-    $height_main = height
+    width = x
+    height = y
     # Return to main menu
-    main_menu
+    main_menu(width, height)
 end
 
 # Actually start the game
