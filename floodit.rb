@@ -2,10 +2,140 @@
 require "console_splash"
 require "colorize"
 
-#Global Variables
-$high_score = -1
-$width_main = 14
-$height_main = 9
+# Splash Screen
+# Displays a screen of size 44 x 15
+# Takes user to main menu
+#
+# Content:
+#   - Author
+#   - Name of game
+#   - Game Version
+#   - Instruction on how to continue (Pressing Enter)
+#
+# Example call:
+#   splash_screen()
+#
+def splash_screen()
+    begin
+        # Clear screen
+        system "clear"
+        # Initialize the splash screen
+        splash = ConsoleSplash.new(15, 44)
+        splash.write_header("FloodIt", "John Ayad", "1.0")
+        splash.write_horizontal_pattern("*")
+        splash.write_vertical_pattern("|")
+        splash.write_center(-3, "<press Enter to continue>")
+        # Run the splash screen
+        splash.splash
+    end until gets == "\n"
+    # Go to main menu
+    main_menu(14, 9, -1)
+end
+
+# Main Menu
+# Possible valid options here are:
+# 1- Start a new game
+# 2- Change Width/height of the game
+# 3- Quit the game
+# 4- View High Score
+# Any invalid entry reloads the main menu and clears the screen before so
+#
+# Parameters:
+#   Width => width of board
+#   Height => Height of board
+#   Highscore => Integer representing current highscore (Default: -1)
+#
+# Example call:
+#   main_menu(14, 9, 10)
+#
+def main_menu(width, height, high_score)
+    system "clear"
+    # List of options for users
+    puts "Main menu:"
+    puts "s = Start Game"
+    puts "c = Change Size"
+    puts "q = Quit"
+    # High Score
+    if high_score == -1
+        puts "No games played yet."
+    else
+        puts "Best game: #{high_score} turns"
+    end
+    print "Please enter your choice: "
+    status = gets.chomp
+    # Respond to user's entry
+    if status.downcase == "s"
+        # Let the games begin
+        start_game(width, height, high_score)
+    elsif status.downcase == "c"
+        # Settings menu
+        settings(width, height, high_score)
+    elsif status.downcase == "q"
+        # Good day to you sir/madam
+        exit
+    else 
+        # Invalid entry => Reload main menu
+        main_menu(width, height, high_score)
+    end
+end
+
+# Settings menu
+#
+# Allows changing of width and height
+#
+# Will fail to update and keep on looping till received an input of more
+# than 0 for both width and height
+#
+# Parameters:
+#   width => Integer representing current width of board
+#   height => Integer representing current height of board
+#   high_score => Integer representing current highscore
+#
+# Example call:
+#   settings(14, 9, 20)
+#
+def settings(width, height, high_score)
+    # Start by width
+    print "Width (Currently #{width})? "
+    x = gets.chomp.to_i
+    while x <= 0 do
+        print "Width (Currently #{width})? "
+        x = gets.chomp.to_i
+    end
+    # Then height
+    print "Height (Currently #{height})? "
+    y = gets.chomp.to_i
+    while y <= 0 do
+        print "Height (Currently #{height})? "
+        y = gets.chomp.to_i
+    end
+    # Reset the high score since it's a new size
+    high_score = -1 if (width != x) || (height != y)
+    # Update global variables
+    width = x
+    height = y
+    # Return to main menu
+    main_menu(width, height, high_score)
+end
+
+# The game caller
+# 
+# This function basically sets the board and calls the actual game
+# 
+# Parameters:
+#   width => Integer representing width of board
+#   height => Integer representing height of board
+#   high_score => Integer representing current highscore
+#
+# Example call:
+#   start_game(14, 9, 20)
+#
+def start_game(width, height, high_score)
+    # Initalize the board
+    board = get_board(width, height)
+    # Start the game play
+    game_play(board, false, 0, high_score)
+end
 
 # Returns an initialized board of the following colours
 # Red, Green, Blue, Yellow, Magenta, Cyan
@@ -38,88 +168,6 @@ def get_board(width, height)
   return board
 end
 
-# Splash Screen
-# Displays a screen of size 44 x 15
-# Takes user to main menu
-#
-# Content:
-#   - Author
-#   - Name of game
-#   - Game Version
-#   - Instruction on how to continue (Pressing Enter)
-#
-# Example call:
-#   splash_screen()
-#
-def splash_screen()
-    begin
-        # Clear screen
-        system "clear"
-        # Initialize the splash screen
-        splash = ConsoleSplash.new(15, 44)
-        splash.write_header("FloodIt", "John Ayad", "1.0")
-        splash.write_horizontal_pattern("*")
-        splash.write_vertical_pattern("|")
-        splash.write_center(-3, "<press Enter to continue>")
-        # Run the splash screen
-        splash.splash
-    end until gets == "\n"
-    # Go to main menu
-    main_menu(14, 9)
-end
-
-# Main Menu
-# Possible valid options here are:
-# 1- Start a new game
-# 2- Change Width/height of the game
-# 3- Quit the game
-# 4- View High Score
-# Any invalid entry reloads the main menu and clears the screen before so
-#
-# Parameters:
-#   Width => width of board
-#   Height => Height of board
-#
-# Example call:
-#   main_menu(14, 9)
-def main_menu(width, height)
-    system "clear"
-    # List of options for users
-    puts "Main menu:"
-    puts "s = Start Game"
-    puts "c = Change Size"
-    puts "q = Quit"
-    # High Score
-    if $high_score == -1
-        puts "No games played yet."
-    else
-        puts "Best game: #$high_score turns"
-    end
-    print "Please enter your choice: "
-    status = gets.chomp
-    # Respond to user's entry
-    if status.downcase == "s"
-        # Let the games begin
-        start_game(width, height)
-    elsif status.downcase == "c"
-        # Settings menu
-        settings(width, height)
-    elsif status.downcase == "q"
-        # Good day to you sir/madam
-        exit
-    else 
-        # Invalid entry => Reload main menu
-        main_menu(width, height)
-    end
-end
-
-def start_game(width, height)
-    # Initalize the board
-    board = get_board(width, height)
-    # Start the game play
-    game_play(board, false, 0)
-end
-
 # The game itself
 # Where all the magic takes place
 #
@@ -127,11 +175,12 @@ end
 #   board => An array of symbols containing the colours of the blocks
 #   game_won => Boolean representing current state of game (true if game is won)
 #   counter_turns => Integer representing number of moves in current game
+#   high_score => Integer representing the current highscore
 #
 # Example call:
-#   game_play(board, false, 0)
+#   game_play(board, false, 0, 10)
 #
-def game_play(board, game_won, counter_turns)
+def game_play(board, game_won, counter_turns, high_score)
     system "clear"
     width = board[0].length
     height = board.length
@@ -165,49 +214,49 @@ def game_play(board, game_won, counter_turns)
         colour_input = gets.chomp
         # Red
         if colour_input.downcase == "r" && board[0][0] != :red
-            board = call_update(board, :red, board[0][0], 0, 0)
+            board = update_board(board, :red, board[0][0], 0, 0)
             game_won = true if completed_percent(board) == 100
-            game_play(board, game_won, counter_turns + 1)
+            game_play(board, game_won, counter_turns + 1, high_score)
         # Green
         elsif colour_input.downcase == "g" && board[0][0] != :green
-            board = call_update(board, :green, board[0][0], 0, 0)
+            board = update_board(board, :green, board[0][0], 0, 0)
             game_won = true if completed_percent(board) == 100
-            game_play(board, game_won, counter_turns + 1)
+            game_play(board, game_won, counter_turns + 1, high_score)
         # Blue
         elsif colour_input.downcase == "b" && board[0][0] != :blue
-            board = call_update(board, :blue, board[0][0], 0, 0)
+            board = update_board(board, :blue, board[0][0], 0, 0)
             game_won = true if completed_percent(board) == 100
-            game_play(board, game_won, counter_turns + 1)
+            game_play(board, game_won, counter_turns + 1, high_score)
         # Yellow
         elsif colour_input.downcase == "y" && board[0][0] != :yellow
-            board = call_update(board, :yellow, board[0][0], 0, 0)
+            board = update_board(board, :yellow, board[0][0], 0, 0)
             game_won = true if completed_percent(board) == 100
-            game_play(board, game_won, counter_turns + 1)
+            game_play(board, game_won, counter_turns + 1, high_score)
         # Cyan
         elsif colour_input.downcase == "c" && board[0][0] != :cyan
-            board = call_update(board, :cyan, board[0][0], 0, 0)
+            board = update_board(board, :cyan, board[0][0], 0, 0)
             game_won = true if completed_percent(board) == 100
-            game_play(board, game_won, counter_turns + 1)
+            game_play(board, game_won, counter_turns + 1, high_score)
         # Magenta
         elsif colour_input.downcase == "m" && board[0][0] != :magenta
-            board = call_update(board, :magenta, board[0][0], 0, 0)
+            board = update_board(board, :magenta, board[0][0], 0, 0)
             game_won = true if completed_percent(board) == 100
-            game_play(board, game_won, counter_turns + 1)
+            game_play(board, game_won, counter_turns + 1, high_score)
         # Quit the game itself
         elsif colour_input.downcase == "q"
-            main_menu(width, height)
+            main_menu(width, height, high_score)
         else 
             # Invalid entry by user OR Entry is same colour already => Clear screen and wait for input
-            game_play(board, game_won, counter_turns)
+            game_play(board, game_won, counter_turns, high_score)
         end
     else
         # Show user he won in how many moves
         puts "You won after #{counter_turns} turns"
         # Update highscore if relevant or requires updating
-        if $high_score == -1
-          $high_score = counter_turns
-        elsif $high_score > counter_turns
-          $high_score = counter_turns
+        if high_score == -1
+          high_score = counter_turns
+        elsif high_score > counter_turns
+          high_score = counter_turns
         end
         # Continue when Enter is pressed
         user_response = gets
@@ -215,7 +264,7 @@ def game_play(board, game_won, counter_turns)
           user_response = gets
         end
         # Return to main menu
-        main_menu(width, height)
+        main_menu(width, height, high_score)
     end
 end
 
@@ -234,6 +283,7 @@ def print_board(board)
     puts
   end
 end
+
 # Flooding recursive function
 # 
 # Parameters:
@@ -247,28 +297,28 @@ end
 #   An updated board (array of symbols)
 #
 # Example call:
-#   call_update(board, :red, board[0][0], 0, 0)
+#   update_board(board, :red, board[0][0], 0, 0)
 #
-def call_update(board, x, old, i, j)
+def update_board(board, x, old, i, j)
     width = board[0].length
     height = board.length
     # Update Position
     board[i][j] = x
     # Bottom
     if i < height - 1 && board[i+1][j] == old
-      call_update(board, x, old, i + 1, j)
+      update_board(board, x, old, i + 1, j)
     end
     # Top
     if i > 0 && board[i-1][j] == old
-      call_update(board, x, old, i - 1, j)
+      update_board(board, x, old, i - 1, j)
     end
     # Right
     if j < width - 1 && board[i][j+1] == old
-      call_update(board, x, old, i, j + 1)
+      update_board(board, x, old, i, j + 1)
     end
     # Left
     if j > 0 && board[i][j - 1] == old
-      call_update(board, x, old, i, j - 1)
+      update_board(board, x, old, i, j - 1)
     end
     # Return the updated board
     return board
@@ -298,40 +348,6 @@ def completed_percent(board)
     # Total number of blocks in board
     total_blocks = board.length * board[0].length
     return (num * 100) / total_blocks
-end
-
-# Settings menu
-#
-# Allows changing of width and height
-#
-# Will fail to update and keep on looping till received an input of more
-# than 0 for both width and height
-#
-# Example call:
-#   settings()
-#
-def settings(width, height)
-    # Start by width
-    print "Width (Currently #{width})? "
-    x = gets.chomp.to_i
-    while x <= 0 do
-        print "Width (Currently #{width})? "
-        x = gets.chomp.to_i
-    end
-    # Then height
-    print "Height (Currently #{height})? "
-    y = gets.chomp.to_i
-    while y <= 0 do
-        print "Height (Currently #{height})? "
-        y = gets.chomp.to_i
-    end
-    # Reset the high score since it's a new size
-    $high_score = -1 if (width != x) || (height != y)
-    # Update global variables
-    width = x
-    height = y
-    # Return to main menu
-    main_menu(width, height)
 end
 
 # Actually start the game
