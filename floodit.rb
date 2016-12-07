@@ -6,8 +6,6 @@ require "colorize"
 $high_score = -1
 $width_main = 14
 $height_main = 9
-$counter_turns = 0
-$game_won = false
 
 # Returns an initialized board of the following colours
 # Red, Green, Blue, Yellow, Magenta, Cyan
@@ -97,9 +95,6 @@ def main_menu()
     status = gets.chomp
     # Respond to user's entry
     if status.downcase == "s"
-        # Reset global variables in preperation for new game
-        $counter_turns = 0
-        $game_won = false
         # Let the games begin
         start_game
     elsif status.downcase == "c"
@@ -118,7 +113,7 @@ def start_game()
     # Initalize the board
     board = get_board($width_main, $height_main)
     # Start the game play
-    game_play(board)
+    game_play(board, false, 0)
 end
 
 # The game itself
@@ -126,18 +121,20 @@ end
 # 
 # Parameters:
 #   board => An array of symbols containing the colours of the blocks
+#   game_won => Boolean representing current state of game (true if game is won)
+#   counter_turns => Integer representing number of moves in current game
 # 
 # Example call:
-#   game_play(board)
+#   game_play(board, false)
 #
-def game_play(board)
+def game_play(board, game_won, counter_turns)
     system "clear"
     # Print colourized board
     print_board(board)
     # Game Info
     # - Number of moves played by user so far
     # - Current completion percentage
-    puts "Turns: #$counter_turns"
+    puts "Turns: #{counter_turns}"
     percentage = completed_percent(board)
     puts "Current completion: #{percentage}%"
 
@@ -156,61 +153,55 @@ def game_play(board)
     #   Inputs expected: Enter by user
     #   User can see here that he won in X number of turns and is allowed to exit to main menu
     #   by presing the Enter key
-    if (!$game_won) 
+    if (!game_won) 
         # Take user input for next colour to flood with
         puts "Choose a colour: "
         colour_input = gets.chomp
         # Red
         if colour_input.downcase == "r" && board[0][0] != :red
             board = call_update(board, :red, board[0][0], 0, 0)
-            $counter_turns += 1
-            $game_won = true if completed_percent(board) == 100
-            game_play(board)
+            game_won = true if completed_percent(board) == 100
+            game_play(board, game_won, counter_turns + 1)
         # Green
         elsif colour_input.downcase == "g" && board[0][0] != :green
             board = call_update(board, :green, board[0][0], 0, 0)
-            $counter_turns += 1
-            $game_won = true if completed_percent(board) == 100
-            game_play(board)
+            game_won = true if completed_percent(board) == 100
+            game_play(board, game_won, counter_turns + 1)
         # Blue
         elsif colour_input.downcase == "b" && board[0][0] != :blue
             board = call_update(board, :blue, board[0][0], 0, 0)
-            $counter_turns += 1
-            $game_won = true if completed_percent(board) == 100
-            game_play(board)
+            game_won = true if completed_percent(board) == 100
+            game_play(board, game_won, counter_turns + 1)
         # Yellow
         elsif colour_input.downcase == "y" && board[0][0] != :yellow
             board = call_update(board, :yellow, board[0][0], 0, 0)
-            $counter_turns += 1
-            $game_won = true if completed_percent(board) == 100
-            game_play(board)
+            game_won = true if completed_percent(board) == 100
+            game_play(board, game_won, counter_turns + 1)
         # Cyan
         elsif colour_input.downcase == "c" && board[0][0] != :cyan
             board = call_update(board, :cyan, board[0][0], 0, 0)
-            $counter_turns += 1
-            $game_won = true if completed_percent(board) == 100
-            game_play(board)
+            game_won = true if completed_percent(board) == 100
+            game_play(board, game_won, counter_turns + 1)
         # Magenta
         elsif colour_input.downcase == "m" && board[0][0] != :magenta
             board = call_update(board, :magenta, board[0][0], 0, 0)
-            $counter_turns += 1
-            $game_won = true if completed_percent(board) == 100
-            game_play(board)
+            game_won = true if completed_percent(board) == 100
+            game_play(board, game_won, counter_turns + 1)
         # Quit the game itself
         elsif colour_input.downcase == "q"
             main_menu
         else 
-            # Invalid entry by user => Clear screen and wait for input
-            game_play(board)
+            # Invalid entry by user OR Entry is same colour already => Clear screen and wait for input
+            game_play(board, game_won, counter_turns)
         end
     else
         # Show user he won in how many moves
-        puts "You won after #$counter_turns turns"
+        puts "You won after #{counter_turns} turns"
         # Update highscore if relevant or requires updating
         if $high_score == -1
-          $high_score = $counter_turns
-        elsif $high_score > $counter_turns
-          $high_score = $counter_turns
+          $high_score = counter_turns
+        elsif $high_score > counter_turns
+          $high_score = counter_turns
         end
         # Continue when Enter is pressed
         user_response = gets
