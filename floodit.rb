@@ -25,7 +25,7 @@ def splash_screen()
         splash.write_horizontal_pattern("*")
         splash.write_vertical_pattern("|")
         splash.write_center(-3, "<press Enter to continue>")
-        # Run the splash screen
+        # Run the splash screen *WATER EVERYWHERE*
         splash.splash
     end until gets == "\n"
     # Go to main menu
@@ -111,7 +111,7 @@ def settings(width, height, high_score)
     end
     # Reset the high score since it's a new size
     high_score = -1 if (width != x) || (height != y)
-    # Update global variables
+    # Update the original variables
     width = x
     height = y
     # Return to main menu
@@ -160,12 +160,37 @@ def get_board(width, height)
   #Initialize actual board array
   board = Array.new(height) { Array.new(width) }
   #Fill the 2D board array
-  for i in 0...board.size
-      for j in 0...board[i].size
-          board[i][j] = color[rand(6)]
-      end
+  (0...board.size).each do |i|
+    (0...board[i].size).each do |j|
+      board[i][j] = color[rand(6)]
+    end
   end
   return board
+end
+
+# Function to return a board used in Memorization
+# By default initialized to -1
+#
+# Parameters:
+#   width => Integer representing width of array
+#   height => Integer representing height of array
+#
+# Returns:
+#   An array filled with -1 of size provided
+#
+# Example call:
+#   free_board(14, 9)
+#
+def free_board(width, height)
+  # Initialize the array size
+  arr = Array.new(height) { Array.new(width) }
+  # -1 To infinity and beyond
+  (0...arr.size).each do |i|
+    (0...arr[i].size).each do |j|
+      arr[i][j] = -1
+    end
+  end
+  return arr
 end
 
 # The game itself
@@ -214,32 +239,32 @@ def game_play(board, game_won, counter_turns, high_score)
         colour_input = gets.chomp
         # Red
         if colour_input.downcase == "r" && board[0][0] != :red
-            board = update_board(board, :red, board[0][0], 0, 0)
+            board = update_board(board, :red, board[0][0], 0, 0, free_board(width, height))
             game_won = true if completed_percent(board) == 100
             game_play(board, game_won, counter_turns + 1, high_score)
         # Green
         elsif colour_input.downcase == "g" && board[0][0] != :green
-            board = update_board(board, :green, board[0][0], 0, 0)
+            board = update_board(board, :green, board[0][0], 0, 0, free_board(width, height))
             game_won = true if completed_percent(board) == 100
             game_play(board, game_won, counter_turns + 1, high_score)
         # Blue
         elsif colour_input.downcase == "b" && board[0][0] != :blue
-            board = update_board(board, :blue, board[0][0], 0, 0)
+            board = update_board(board, :blue, board[0][0], 0, 0, free_board(width, height))
             game_won = true if completed_percent(board) == 100
             game_play(board, game_won, counter_turns + 1, high_score)
         # Yellow
         elsif colour_input.downcase == "y" && board[0][0] != :yellow
-            board = update_board(board, :yellow, board[0][0], 0, 0)
+            board = update_board(board, :yellow, board[0][0], 0, 0, free_board(width, height))
             game_won = true if completed_percent(board) == 100
             game_play(board, game_won, counter_turns + 1, high_score)
         # Cyan
         elsif colour_input.downcase == "c" && board[0][0] != :cyan
-            board = update_board(board, :cyan, board[0][0], 0, 0)
+            board = update_board(board, :cyan, board[0][0], 0, 0, free_board(width, height))
             game_won = true if completed_percent(board) == 100
             game_play(board, game_won, counter_turns + 1, high_score)
         # Magenta
         elsif colour_input.downcase == "m" && board[0][0] != :magenta
-            board = update_board(board, :magenta, board[0][0], 0, 0)
+            board = update_board(board, :magenta, board[0][0], 0, 0, free_board(width, height))
             game_won = true if completed_percent(board) == 100
             game_play(board, game_won, counter_turns + 1, high_score)
         # Quit the game itself
@@ -292,33 +317,36 @@ end
 #   old => The colour of the 0 and 0 position
 #   i => Row
 #   j => Col
+#   arr => Empty array of the same size as current board (Memorization)
 #
 # Returns:
 #   An updated board (array of symbols)
 #
 # Example call:
-#   update_board(board, :red, board[0][0], 0, 0)
+#   update_board(board, :red, board[0][0], 0, 0, board2)
 #
-def update_board(board, x, old, i, j)
+def update_board(board, x, old, i, j, arr)
     width = board[0].length
     height = board.length
     # Update Position
     board[i][j] = x
+    # Memorize
+    arr[i][j] = 0
     # Bottom
-    if i < height - 1 && board[i+1][j] == old
-      update_board(board, x, old, i + 1, j)
+    if i < height - 1 && board[i+1][j] == old && arr[i + 1][j] == -1
+      update_board(board, x, old, i + 1, j, arr)
     end
     # Top
-    if i > 0 && board[i-1][j] == old
-      update_board(board, x, old, i - 1, j)
+    if i > 0 && board[i-1][j] == old && arr[i - 1][j] == -1
+      update_board(board, x, old, i - 1, j, arr)
     end
     # Right
-    if j < width - 1 && board[i][j+1] == old
-      update_board(board, x, old, i, j + 1)
+    if j < width - 1 && board[i][j+1] == old && arr[i][j + 1] == -1
+      update_board(board, x, old, i, j + 1, arr)
     end
     # Left
-    if j > 0 && board[i][j - 1] == old
-      update_board(board, x, old, i, j - 1)
+    if j > 0 && board[i][j - 1] == old && arr[i][j - 1] == -1
+      update_board(board, x, old, i, j - 1, arr)
     end
     # Return the updated board
     return board
