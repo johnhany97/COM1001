@@ -1,3 +1,8 @@
+# Flood-It game
+# This game was created as a COM1001 Assignment
+#
+# Copyright (C) 2016  John H. Ayad
+
 #Include ruby gems
 require "console_splash"
 require "colorize"
