@@ -157,15 +157,8 @@ end
 def get_board(width, height)
   #Initialize Array of colours
   color = [:red, :green, :blue, :yellow, :magenta, :cyan]
-  #Initialize actual board array
-  board = Array.new(height) { Array.new(width) }
-  #Fill the 2D board array
-  (0...board.size).each do |i|
-    (0...board[i].size).each do |j|
-      board[i][j] = color[rand(6)]
-    end
-  end
-  return board
+  #Initialize & return actual board array
+  return Array.new(height) { Array.new(width) { color[rand(6)] } }
 end
 
 # Function to return a board used in Memorization
@@ -182,15 +175,7 @@ end
 #   free_board(14, 9)
 #
 def free_board(width, height)
-  # Initialize the array size
-  arr = Array.new(height) { Array.new(width) }
-  # -1 To infinity and beyond
-  (0...arr.size).each do |i|
-    (0...arr[i].size).each do |j|
-      arr[i][j] = -1
-    end
-  end
-  return arr
+  return Array.new(height) { Array.new(width) { -1 }}
 end
 
 # The game itself
