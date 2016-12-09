@@ -160,10 +160,10 @@ end
 #   get_board(20, 30)
 #
 def get_board(width, height)
-	#Initialize Array of colours
-	color = [:red, :green, :blue, :yellow, :magenta, :cyan]
-	#Initialize & return actual board array
-	return Array.new(height) { Array.new(width) { color[rand(6)] } }
+  #Initialize Array of colours
+  color = [:red, :green, :blue, :yellow, :magenta, :cyan]
+  #Initialize & return actual board array
+  return Array.new(height) { Array.new(width) { color[rand(6)] } }
 end
 
 # Function to return a board used in Memorization
@@ -180,7 +180,7 @@ end
 #   free_board(14, 9)
 #
 def free_board(width, height)
-	return Array.new(height) { Array.new(width) { -1 }}
+  return Array.new(height) { Array.new(width) { -1 }}
 end
 
 # The game itself
@@ -196,7 +196,7 @@ end
 #   game_play(board, false, 0, 10)
 #
 def game_play(board, game_won, counter_turns, high_score)
-	system "clear"
+    system "clear"
     width = board[0].length
     height = board.length
     # Print colourized board
@@ -222,7 +222,7 @@ def game_play(board, game_won, counter_turns, high_score)
     # For Second scenario:
     #   Inputs expected: Enter by user
     #   User can see here that he won in X number of turns and is allowed to exit to main menu
-    #   by pressing the Enter key
+    #   by presing the Enter key
     if (!game_won) 
         # Take user input for next colour to flood with
         puts "Choose a colour: "
@@ -267,7 +267,7 @@ def game_play(board, game_won, counter_turns, high_score)
     else
         # Show user he won in how many moves
         puts "You won after #{counter_turns} turns"
-        # Update high score if relevant or requires updating
+        # Update highscore if relevant or requires updating
         if high_score == -1
           high_score = counter_turns
         elsif high_score > counter_turns
@@ -291,12 +291,12 @@ end
 # Example call:
 #    print_board(board)
 def print_board(board)
-	board.each do |row|
-		row.each do |x|
-			print "  ".colorize(:background => x)
-		end
-		puts
-	end
+  board.each do |row|
+    row.each do |x|
+      print "  ".colorize(:background => x)
+    end
+    puts
+  end
 end
 
 # Flooding recursive function
@@ -324,19 +324,19 @@ def update_board(board, x, old, i, j, arr)
     arr[i][j] = 0
     # Bottom
     if i < height - 1 && board[i+1][j] == old && arr[i + 1][j] == -1
-		update_board(board, x, old, i + 1, j, arr)
+      update_board(board, x, old, i + 1, j, arr)
     end
     # Top
     if i > 0 && board[i-1][j] == old && arr[i - 1][j] == -1
-		update_board(board, x, old, i - 1, j, arr)
+      update_board(board, x, old, i - 1, j, arr)
     end
     # Right
     if j < width - 1 && board[i][j+1] == old && arr[i][j + 1] == -1
-		update_board(board, x, old, i, j + 1, arr)
+      update_board(board, x, old, i, j + 1, arr)
     end
     # Left
     if j > 0 && board[i][j - 1] == old && arr[i][j - 1] == -1
-		update_board(board, x, old, i, j - 1, arr)
+      update_board(board, x, old, i, j - 1, arr)
     end
     # Return the updated board
     return board
@@ -359,9 +359,9 @@ def completed_percent(board)
     # Counter of how many blocks of same colour
     num = 0
     board.each do |row|
-		row.each do |cell|
-			num += 1 if cell == color_to_search
-		end
+      row.each do |cell|
+        num += 1 if cell == color_to_search
+      end
     end
     # Total number of blocks in board
     total_blocks = board.length * board[0].length
